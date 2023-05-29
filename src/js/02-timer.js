@@ -1,96 +1,87 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import Notiflix from 'notiflix';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-const options = {
-  enableTime: true,
-  time_24hr: true,
-  defaultDate: new Date(),
-  minuteIncrement: 1,
-  onClose,
+let timerID = null;
+
+const refs = {
+    inputDate: document.getElementById('datetime-picker'),
+    btnStart: document.querySelector('button[data-start]'),
+
+    dataDaysEl: document.querySelector('span[data-days]'),
+    dataHoursEl: document.querySelector('span[data-hours]'),
+    dataMinutesEl: document.querySelector('span[data-minutes]'),
+    dataSecondsEl: document.querySelector('span[data-seconds]'),
 };
 
-Notiflix.Notify.init({
-  fontSize: '28px',
-  width: '400px',
-  borderRadius: '40px',
-  });
+const optionsFlatpickr = {
+    enableTime: true,
+    time_24hr: true,
+    defaultDate: new Date(),
+    minuteIncrement: 1,
+    onClose(selectedDates) {
 
-const inputEl = document.querySelector('#datetime-picker');
-const btnStart = document.querySelector('button[data-start]');
-const spanDays = document.querySelector('span[data-days]');
-const spanHours = document.querySelector('span[data-hours]');
-const spanMinutes = document.querySelector('span[data-minutes]');
-const spanSeconds = document.querySelector('span[data-seconds]');
+        const currentDate = new Date().getTime();
+        const timerInSeconds = selectedDates[0] - currentDate;
 
-btnStart.addEventListener('click', getSelectedTime);
-
-function onClose(selectedDates) {
-  const currentTime = Date.now();
-  const ms = selectedDates[0] - currentTime;
-    if (ms < 0) {
-      Notiflix.Notify.failure("I don't know the past🤯");
-      } else {
-        btnStart.removeAttribute('disabled', 'true');
-        Notiflix.Notify.success('Waiting for the timer 😎');   
+        if (timerInSeconds <= 0) {
+            Notify.failure('Please choose a date in the future');
+            return null;
         }
-}
 
-function getSelectedTime() {   
-timerStart();
-btnStart.setAttribute('disabled', 'false');
-}
+        const objTimer = convertMs(timerInSeconds);
 
-function timerStart() {
-  inputEl.setAttribute('disabled', 'true');
-  const selectedDay = new Date(inputEl.value);
-  const selectedTimeMs = selectedDay.getTime(); 
-  
-  const intervalId = setInterval(() => {
-  const currentTime = Date.now();
-  const deltaTime = selectedTimeMs - currentTime;
+        renderTimer(objTimer);
 
-    if (deltaTime < 0 && deltaTime > -1000) {
-      clearInterval(intervalId);
-      inputEl.removeAttribute('disabled', 'true');
-      Notiflix.Notify.success('Time is up 🥳🥳🥳');
-    } else {
-      updateTime(convertMs(deltaTime));
-    }
-  }, 1000);
+        refs.btnStart.disabled = false;
+        refs.inputDate.disabled = true;
+    },
 };
 
-function pad(value) {
-  return String(value).padStart(2, '0');
+refs.btnStart.disabled = true;
+refs.btnStart.addEventListener('click', onClickStart)
+
+const objFlatpickr = flatpickr(refs.inputDate, optionsFlatpickr);
+
+function onClickStart() {
+    refs.btnStart.disabled = true;
+
+    const selectTime = objFlatpickr.latestSelectedDateObj.getTime();
+    timerID = setInterval(startTime, 1000, selectTime);
 }
 
-function padDays(value) {
-    if(value < 100) {
-    return String(value).padStart(2, '0');
-    } 
-  return String(value).padStart(3, '0');
+function startTime(selectTime) {
+    let currentDate = selectTime - new Date().getTime();
+
+    if (currentDate <= 0) {
+        clearInterval(timerID);
+        renderTimer({ days: "00", hours: "00", minutes: "00", seconds: "00" })
+        refs.btnStart.disabled = true;
+        refs.inputDate.disabled = false;
+        return;
+    }
+
+    const objTimer = convertMs(currentDate);
+    renderTimer(objTimer)
 }
 
-function convertMs(time) {
-  // Number of milliseconds per unit of time
-  const second = 1000;
-  const minute = second * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-
-  const days = padDays(Math.floor(time / day));
-  const hours = pad(Math.floor((time % day) / hour));
-  const minutes = pad(Math.floor(((time % day) % hour) / minute));
-  const seconds = pad(Math.floor((((time % day) % hour) % minute) / second));
-
-  const getTime = { days, hours, minutes, seconds };
-  return getTime;
+function renderTimer(objTimer) {
+    refs.dataDaysEl.innerText = String(objTimer.days).padStart(2, '0');
+    refs.dataHoursEl.innerText = String(objTimer.hours).padStart(2, '0');
+    refs.dataMinutesEl.innerText = String(objTimer.minutes).padStart(2, '0');
+    refs.dataSecondsEl.innerText = String(objTimer.seconds).padStart(2, '0');
 }
 
-flatpickr(inputEl, options);
-function updateTime({ days, hours, minutes, seconds }) {
-  spanDays.innerHTML = days;
-  spanHours.innerHTML = hours;
-  spanMinutes.innerHTML = minutes;
-  spanSeconds.innerHTML = seconds;
+function convertMs(ms) {
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+
+    const days = Math.floor(ms / day);
+    const hours = Math.floor((ms % day) / hour);
+    const minutes = Math.floor(((ms % day) % hour) / minute);
+    const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+    return { days, hours, minutes, seconds };
 }

@@ -1,34 +1,31 @@
 function getRandomHexColor() {
-    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
 }
 
-function getRandomHexColorTwo() {
-    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-}
+const refs = {
+    startBtn: document.querySelector('button[data-start]'),
+    stopBtn: document.querySelector('button[data-stop]'),
+    body: document.body,
+};
 
-const startBtn = document.querySelector('button[data-start]');
-const stopBtn = document.querySelector('button[data-stop]');
+refs.startBtn.addEventListener('click', startBtnClick);
+refs.stopBtn.addEventListener('click', stopBtnClick);
+refs.stopBtn.disabled = true;
+
 let intervalId = null;
 
-const startBtnClick = () => {
-    console.log('+1 click to startBtn')
+function startBtnClick() {
+    console.log('+1 click to startBtn');
     intervalId = setInterval(() => {
-        document.body.style.background = `-webkit-linear-gradient(45deg,${getRandomHexColor()},${getRandomHexColorTwo()})`;
+        refs.body.style.backgroundColor = getRandomHexColor();
     }, 1000);
-    startBtn.setAttribute('disabled', 'true');
-    stopBtn.removeAttribute('disabled', 'true');
-    startBtn.style.background = '#808080';
-    stopBtn.style.background = '-webkit-linear-gradient(90deg,#bb056c,#e72d44)';
-};
+    refs.startBtn.setAttribute('disabled', 'true');
+    refs.stopBtn.removeAttribute('disabled');
+}
 
-const stopBtnClick = () => {
-    console.log('+1 click to stopBtn')
+function stopBtnClick() {
+    console.log('+1 click to stopBtn');
     clearInterval(intervalId);
-    startBtn.removeAttribute('disabled', 'true');
-    stopBtn.setAttribute('disabled', 'true');
-    stopBtn.style.background = '#808080';
-    startBtn.style.background = '-webkit-linear-gradient(90deg,#bb056c,#e72d44)';
-};
-
-startBtn.addEventListener('click', startBtnClick);
-stopBtn.addEventListener("click", stopBtnClick);
+    refs.startBtn.removeAttribute('disabled');
+    refs.stopBtn.setAttribute('disabled', 'true');
+}

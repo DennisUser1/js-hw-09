@@ -13,7 +13,7 @@ body {
 }
 
 .container {
-  background: -webkit-linear-gradient(45deg,#d2bd92,#ddcaa0,#f8f3e0);
+  background: -webkit-linear-gradient(45deg, #d2bd92, #ddcaa0, #f8f3e0);
   color: #212121;
   height: 100vh;
   box-shadow: 0px 5px 10px 10px rgba(34, 60, 80, 0.2) inset;
@@ -21,14 +21,14 @@ body {
   padding: 30px;
 }
 
-.container--color-swither {
+.container--color-switcher {
   height: 100vh;
   box-shadow: 0px 5px 10px 10px rgba(34, 60, 80, 0.2) inset;
   margin: 0;
   padding: 30px;
 }
 
-.container--main{ 
+.container--main {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,7 +43,6 @@ body {
 
 .container--main a {
   padding: 20px 10px;
-  
 }
 
 .container--main li {
@@ -61,7 +60,7 @@ a {
   color: #bb056c;
   font-size: 24px;
   font-weight: 700;
-  background: -webkit-linear-gradient(45deg,#d2bd92,#ddcaa0,#f8f3e0);
+  background: -webkit-linear-gradient(45deg, #d2bd92, #ddcaa0, #f8f3e0);
   border: 4px solid #bb056c;
   border-radius: 10px;
   box-shadow: 5px 5px 13px 0px rgba(34, 60, 80, 0.6);
@@ -72,7 +71,7 @@ a {
 .go-back {
   color: #f8f3e0;
   border: 2px solid black;
-  background: -webkit-linear-gradient(90deg,#bb056c,#e72d44);
+  background: -webkit-linear-gradient(90deg, #bb056c, #e72d44);
   padding: 4px;
 }
 
@@ -110,7 +109,7 @@ input {
   border: 0;
   border-radius: 4px;
   text-align: center;
-  background: -webkit-linear-gradient(90deg,#c3284d,#f76463);
+  background: -webkit-linear-gradient(90deg, #c3284d, #f76463);
   display: table;
   color: white;
   border-radius: 5px;
@@ -119,18 +118,28 @@ input {
   margin-bottom: 20px;
 }
 
-button {
+button[data-start],
+button[data-stop] {
   padding: 30px 40px;
-  margin: 10px auto 40px;
+  border-radius: 5px;
   border: 0;
-  border-radius: 4px;
-  background: -webkit-linear-gradient(90deg,#bb056c,#e72d44);
+  margin: 10px auto 40px;
+  cursor: pointer;
+  font-size: 28px;
+  background-color:#c3284d;
   display: table;
   color: whitesmoke;
-  font-size: 28px;
-  box-shadow: 5px 5px 13px 0px rgba(34, 60, 80, 0.6);
-  cursor: pointer;
 }
+
+button[data-start]:hover,
+button[data-stop]:hover {
+  background-color: #ed4155;
+}
+
+button[data-start]:disabled,
+button[data-stop]:disabled {
+  background-color: #acacac;
+} 
 
 .timer {
   margin: 100px auto 0;
@@ -139,7 +148,7 @@ button {
   font-size: 72px;
   width: 700px;
   border: 10px solid red;
-  border-image: -webkit-linear-gradient(90deg,#bb056c,#e72d44);
+  border-image: -webkit-linear-gradient(90deg, #bb056c, #e72d44);
   border-image-slice: 1;
   box-shadow: 5px 5px 13px 0px rgba(34, 60, 80, 0.6);
 }
@@ -163,7 +172,7 @@ button {
   min-width: 100px;
   padding-bottom: 15px;
   text-align: center;
-  background: -webkit-linear-gradient(90deg,#c3284d,#f76463);
+  background: -webkit-linear-gradient(90deg, #c3284d, #f76463);
   display: table;
   color: white;
   border-radius: 5px;
@@ -184,4 +193,17 @@ button {
   content: ':';
   position: absolute;
   right: -17px;
+}
+
+.submit-btn {
+  width: 300px;
+  padding: 12px 15px;
+  margin: 10px auto 40px;
+  border: 0;
+  border-radius: 4px;
+  background: -webkit-linear-gradient(90deg,#bb056c,#e72d44);
+  color: whitesmoke;
+  font-size: 18px;
+  box-shadow: 5px 5px 13px 0px rgba(34, 60, 80, 0.6);
+  cursor: pointer;
 }
